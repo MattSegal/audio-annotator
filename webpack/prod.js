@@ -9,7 +9,7 @@ module.exports = {
     filename: 'main.js',
   },
   optimization: {
-    minimizer: [new TerserPlugin({ sourceMap: true })],
+    minimizer: [new TerserPlugin({ sourceMap: false })],
   },
   plugins: [...baseConfig.plugins],
 }

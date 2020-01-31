@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const baseConfig = require('./base.js')
 
 module.exports = {
@@ -15,5 +16,5 @@ module.exports = {
   optimization: {
     minimize: false,
   },
-  plugins: [...baseConfig.plugins],
+  plugins: [...baseConfig.plugins, new webpack.HotModuleReplacementPlugin()],
 }
