@@ -1,0 +1,41 @@
+{
+  "name": "audio-annotator",
+  "version": "1.0.0",
+  "description": "Build chain for audio annotator web app",
+  "author": "Matthew Segal",
+  "scripts": {
+    "serve": "webpack-dev-server --config webpack/dev.js",
+    "build": "webpack --config webpack/prod.js",
+    "lint": "prettier --list-different \"src/**/*.js\"",
+    "format": "prettier --write \"src/**/*.js\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-flow": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-styled-components": "^1.10.7",
+    "eslint": "^6.8.0",
+    "eslint-plugin-flowtype": "^4.6.0",
+    "eslint-plugin-react": "^7.18.0",
+    "flow-bin": "^0.117.0",
+    "flow-typed": "^2.6.2",
+    "prettier": "^1.19.1",
+    "terser-webpack-plugin": "^2.3.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "dependencies": {
+    "howler": "^2.1.3",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "semantic-ui-react": "^0.88.2",
+    "styled-components": "^5.0.0"
+  }
+}

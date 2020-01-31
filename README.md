@@ -1,5 +1,7 @@
 # Audio Annotator
 
+View site [here](https://mattsegal.github.io/audio-annotator/)
+
 Workflow
 
 - single label classification
@@ -26,3 +28,10 @@ Imp notes
 - Use Howler to manage audio (https://github.com/goldfire/howler.js#documentation)
 - Use sprite example as jump off point https://github.com/goldfire/howler.js/tree/master/examples/sprite
 - rip off whatever is available from https://github.com/MattSegal/music-player
+
+# Development
+
+- Run dev server: `yarn serve`
+- Build assets `yarn build`
+- Run linter `yarn lint`
+- Apply formatting `yarn format`

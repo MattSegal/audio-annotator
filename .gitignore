@@ -1,0 +1,11 @@
+# Project
+*secret*
+
+# Random crap
+*.log
+*.retry
+*.pid
+*.db
+
+# Frontend
+node_modules/
