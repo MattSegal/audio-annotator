@@ -3,7 +3,11 @@ import React, { useRef, useState } from 'react'
 import { Button, Segment } from 'semantic-ui-react'
 import styled, { css } from 'styled-components'
 
-export const FileDropForm = ({ onUpload }) => {
+type Props = {
+  onUpload: (Array<File>) => any,
+}
+
+export const FileDropForm = ({ onUpload }: Props) => {
   const { DropBox, HiddenInput, onClick } = useFileDrop(onUpload)
   return (
     <Segment placeholder>
@@ -18,7 +22,7 @@ export const FileDropForm = ({ onUpload }) => {
   )
 }
 
-const useFileDrop = onUpload => {
+const useFileDrop = (onUpload: (Array<File>) => any) => {
   const ref = useRef(null)
   const [drag, setDrag] = useState(false)
   const onDragOver = val => e => {
@@ -34,13 +38,17 @@ const useFileDrop = onUpload => {
     setDrag(false)
   }
   const onChange = e => {
-    const files = e.target.files
-    if (files.length > 0) {
+    const fileList: FileList = e.target.files
+    if (fileList.length > 0) {
+      const files = []
+      for (let i = 0; i < fileList.length; i++) {
+        files.push(fileList[i])
+      }
       onUpload(files)
     }
   }
   const onClick = () => {
-    ref.current.click()
+    ref.current && ref.current.click()
   }
   const HiddenInput = () => (
     <input
