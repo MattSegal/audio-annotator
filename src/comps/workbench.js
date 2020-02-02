@@ -1,7 +1,7 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Container, Header, List } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 
 // https://github.com/goldfire/howler.js#documentation
 // https://github.com/goldfire/howler.js/blob/master/examples/sprite/sprite.js
@@ -9,6 +9,7 @@ import { Howl } from 'howler'
 
 import { AudioControls } from './audio-controls'
 import { Waveform } from './waveform'
+import { FileList } from './file-list'
 
 type Props = {
   files: Array<File>,
@@ -40,35 +41,66 @@ export const Workbench = ({ files }: Props) => {
   // Load file data when file changes
   useEffect(() => onNewFile(files[fileIdx], sound, setSound), [fileIdx])
   return (
-    <WorkbenchContainer>
-      <Header as="h1" textAlign="center">
-        View audio files
-      </Header>
-      <List divided relaxed>
-        {files.map((f, idx) => (
-          <List.Item key={f.name}>
-            <List.Icon
-              name={`file audio${fileIdx !== idx ? ' outline' : ''}`}
-              size="large"
-              verticalAlign="middle"
-            />
-            <List.Content>
-              <List.Header>{f.name}</List.Header>
-              <List.Description>
-                {f.type} - {(f.size / 1e6).toFixed(1)} MB
-              </List.Description>
-            </List.Content>
-          </List.Item>
-        ))}
-      </List>
-      <AudioControls sound={sound} isLoop={isLoop} setLoop={setLoop} />
-      <Waveform file={files[fileIdx]} />
-    </WorkbenchContainer>
+    <WorkbenchGrid>
+      <Grid.Row>
+        <Grid.Column width={4}>
+          <FileListWrapper>
+            <FileList files={files} fileIdx={fileIdx} />
+          </FileListWrapper>
+        </Grid.Column>
+        <Grid.Column width={12}>
+          <AudioWrapper>
+            <AudioWrapperInner>
+              <AudioControls sound={sound} isLoop={isLoop} setLoop={setLoop} />
+              <CanvasWrapper>
+                <CanvasInner zIndex={0}>
+                  <Waveform file={files[fileIdx]} />
+                </CanvasInner>
+              </CanvasWrapper>
+            </AudioWrapperInner>
+          </AudioWrapper>
+        </Grid.Column>
+      </Grid.Row>
+    </WorkbenchGrid>
   )
 }
 
-const WorkbenchContainer = styled(Container)`
-  padding: 1rem 0;
+const WorkbenchGrid = styled(Grid)`
+  &.ui.grid {
+    height: 100vh;
+  }
+`
+const CanvasInner = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: ${({ zIndex }) => zIndex};
+`
+const CanvasWrapper = styled.div`
+  width: 800px;
+  height: 200px;
+  position: relative;
+`
+const AudioWrapper = styled.div`
+  height: 100vh;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const AudioWrapperInner = styled.div`
+  width: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
+const FileListWrapper = styled.div`
+  height: 100vh;
+  overflow-y: scroll;
+  padding: 1rem;
 `
 
 const onNewFile = (file: File, sound: any, setSound: Function) => {
