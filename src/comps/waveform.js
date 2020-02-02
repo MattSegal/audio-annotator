@@ -6,20 +6,16 @@ type Props = {
   file: File,
 }
 
-// use canvas, use audio ctx
-// requestAnimationFrame
-// handle resize
-
-// Renders a waveform
+// Renders a waveform to a canvas
 export const Waveform = ({ file }: Props) => {
   const canvas = useRef(null)
   useEffect(renderWaveform(file, canvas), [file])
-  return <CanvasEl ref={canvas} />
+  return <CanvasEl ref={canvas} width={800} height={200} />
 }
 
 const CanvasEl = styled.canvas`
-  width: 100%;
-  height: 200px;
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
+  border: 1px solid rgba(34, 36, 38, 0.15);
 `
 
 // Renders file waveform to canvas.
@@ -56,12 +52,10 @@ const renderWaveform = (
       )
 
       // Read audio buffer into buckets so we can draw each bucket, histogram style
-      const bufferSize = 2 ** 10
+      const bufferSize = 512
       const numBuckets = Math.floor(buffer.length / bufferSize)
       let bucketCount = 0
       const bucketArray = new Float32Array(numBuckets)
-
-      window.arr = bucketArray
 
       // Reduce each buffer chunk into a single value
       const scriptProcessor = audioCtx.createScriptProcessor(bufferSize, 2, 2)
