@@ -1,9 +1,10 @@
 import React from 'react'
-import { Segment, Icon } from 'semantic-ui-react'
+import { Segment, Icon, Header } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 type Props = {
   sound: any,
+  file: File,
   isLoop: boolean,
   setLoop: Function,
 }
@@ -15,7 +16,7 @@ type Props = {
 // sound.sounds[0]._stop
 // sound.ctx
 // TODO - display x / y sprites and current time
-export const AudioControls = ({ sound, isLoop, setLoop }: Props) => {
+export const AudioControls = ({ sound, file, isLoop, setLoop }: Props) => {
   window.sound = sound
   const onPlay = () => !sound.playing() && sound.play()
   const onPause = () => sound.pause()
@@ -24,13 +25,13 @@ export const AudioControls = ({ sound, isLoop, setLoop }: Props) => {
 
   if (!sound) {
     return (
-      <Segment>
+      <SegmentEl>
         <Icon size="large" name="ellipsis horizontal" />
-      </Segment>
+      </SegmentEl>
     )
   } else {
     return (
-      <Segment>
+      <SegmentEl>
         <ActionIcon
           title="Play"
           onClick={onPlay}
@@ -55,11 +56,15 @@ export const AudioControls = ({ sound, isLoop, setLoop }: Props) => {
           size="large"
           name={isLoop ? 'ban' : 'repeat'}
         />
-      </Segment>
+        <Header as="h4">{file.name}</Header>
+      </SegmentEl>
     )
   }
 }
 
 const ActionIcon = styled(Icon)`
   cursor: pointer;
+`
+const SegmentEl = styled(Segment)`
+  width: 100%;
 `

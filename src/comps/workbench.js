@@ -40,9 +40,10 @@ export const Workbench = ({ files }: Props) => {
   }, [])
   // Load file data when file changes
   useEffect(() => onNewFile(files[fileIdx], sound, setSound), [fileIdx])
+  const file = files[fileIdx]
   return (
     <WorkbenchGrid>
-      <Grid.Row>
+      <Row>
         <Grid.Column width={4}>
           <FileListWrapper>
             <FileList files={files} fileIdx={fileIdx} />
@@ -51,16 +52,21 @@ export const Workbench = ({ files }: Props) => {
         <Grid.Column width={12}>
           <AudioWrapper>
             <AudioWrapperInner>
-              <AudioControls sound={sound} isLoop={isLoop} setLoop={setLoop} />
+              <AudioControls
+                sound={sound}
+                file={file}
+                isLoop={isLoop}
+                setLoop={setLoop}
+              />
               <CanvasWrapper>
                 <CanvasInner zIndex={0}>
-                  <Waveform file={files[fileIdx]} />
+                  <Waveform file={file} />
                 </CanvasInner>
               </CanvasWrapper>
             </AudioWrapperInner>
           </AudioWrapper>
         </Grid.Column>
-      </Grid.Row>
+      </Row>
     </WorkbenchGrid>
   )
 }
@@ -69,6 +75,9 @@ const WorkbenchGrid = styled(Grid)`
   &.ui.grid {
     height: 100vh;
   }
+`
+const Row = styled(Grid.Row)`
+  padding: 0 !important;
 `
 const CanvasInner = styled.div`
   position: absolute;
