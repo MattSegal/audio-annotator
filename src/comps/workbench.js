@@ -16,6 +16,7 @@ export const Workbench = ({ files }: Props) => {
   const [fileIdx, setFileIdx] = useState(0)
   const [sound, setSound] = useState(null)
   const [isLoop, setLoop] = useState(false)
+
   // Handle loop toggle
   useEffect(() => {
     if (sound) {
