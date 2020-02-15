@@ -2,15 +2,19 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
+import { CANVAS } from 'consts'
+
 type Props = {
   file: File,
 }
 
 // Renders a waveform to a canvas
 export const Waveform = ({ file }: Props) => {
-  const canvas = useRef(null)
-  useEffect(renderWaveform(file, canvas), [file])
-  return <CanvasEl ref={canvas} width={800} height={200} />
+  const canvasRef = useRef(null)
+  useEffect(renderWaveform(file, canvasRef), [file])
+  return (
+    <CanvasEl ref={canvasRef} width={CANVAS.WIDTH} height={CANVAS.HEIGHT} />
+  )
 }
 
 const CanvasEl = styled.canvas`
@@ -28,10 +32,6 @@ const renderWaveform = (
   if (!canvas || !file) return
   const canvasCtx = canvas.getContext('2d')
   canvasCtx.clearRect(0, 0, canvas.width, canvas.height)
-
-  // https://github.com/MattSegal/music-player/blob/master/src/index.js
-  // https://github.com/MattSegal/music-player/blob/master/src/canvas.js
-  // https://github.com/MattSegal/music-player/blob/master/src/audio.js
 
   // Read file into array buffer
   const readPromise = new Promise(resolve => {

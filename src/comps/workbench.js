@@ -1,14 +1,11 @@
 // @flow
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Grid } from 'semantic-ui-react'
-
-// https://github.com/goldfire/howler.js#documentation
-// https://github.com/goldfire/howler.js/blob/master/examples/sprite/sprite.js
 import { Howl } from 'howler'
 
+import { CANVAS } from 'consts'
 import { AudioControls } from './audio-controls'
-import { Waveform } from './waveform'
+import { AudioCanvas } from './audio-canvas'
 import { FileList } from './file-list'
 
 type Props = {
@@ -42,74 +39,50 @@ export const Workbench = ({ files }: Props) => {
   useEffect(() => onNewFile(files[fileIdx], sound, setSound), [fileIdx])
   const file = files[fileIdx]
   return (
-    <WorkbenchGrid>
-      <Row>
-        <Grid.Column width={4}>
-          <FileListWrapper>
-            <FileList files={files} fileIdx={fileIdx} />
-          </FileListWrapper>
-        </Grid.Column>
-        <Grid.Column width={12}>
-          <AudioWrapper>
-            <AudioWrapperInner>
-              <AudioControls
-                sound={sound}
-                file={file}
-                isLoop={isLoop}
-                setLoop={setLoop}
-              />
-              <CanvasWrapper>
-                <CanvasInner zIndex={0}>
-                  <Waveform file={file} />
-                </CanvasInner>
-              </CanvasWrapper>
-            </AudioWrapperInner>
-          </AudioWrapper>
-        </Grid.Column>
-      </Row>
-    </WorkbenchGrid>
+    <WorkbenchEl>
+      <FileListWrapper>
+        <FileList files={files} fileIdx={fileIdx} />
+      </FileListWrapper>
+      <AudioWrapper>
+        <AudioWrapperInner>
+          <AudioControls
+            sound={sound}
+            file={file}
+            isLoop={isLoop}
+            setLoop={setLoop}
+          />
+          <AudioCanvas file={file} sound={sound} />
+        </AudioWrapperInner>
+      </AudioWrapper>
+    </WorkbenchEl>
   )
 }
 
-const WorkbenchGrid = styled(Grid)`
-  &.ui.grid {
-    height: 100vh;
-  }
+const WorkbenchEl = styled.div`
+  height: 100vh;
+  display: flex;
 `
-const Row = styled(Grid.Row)`
-  padding: 0 !important;
+const FileListWrapper = styled.div`
+  height: 100vh;
+  width: 300px;
+  overflow-y: scroll;
+  padding: 1rem;
 `
-const CanvasInner = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: ${({ zIndex }) => zIndex};
-`
-const CanvasWrapper = styled.div`
-  width: 800px;
-  height: 200px;
-  position: relative;
-`
+
 const AudioWrapper = styled.div`
   height: 100vh;
   padding: 1rem;
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 `
 const AudioWrapperInner = styled.div`
-  width: 800px;
+  width: ${CANVAS.WIDTH}px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-`
-const FileListWrapper = styled.div`
-  height: 100vh;
-  overflow-y: scroll;
-  padding: 1rem;
 `
 
 const onNewFile = (file: File, sound: any, setSound: Function) => {

@@ -9,15 +9,7 @@ type Props = {
   setLoop: Function,
 }
 
-// sound.seek(seconds)
-// sound.duration (seconds)
-// sound.sounds[0]._seek
-// sound.sounds[0]._start
-// sound.sounds[0]._stop
-// sound.ctx
-// TODO - display x / y sprites and current time
 export const AudioControls = ({ sound, file, isLoop, setLoop }: Props) => {
-  window.sound = sound
   const onPlay = () => !sound.playing() && sound.play()
   const onPause = () => sound.pause()
   const onStop = () => sound.stop()
