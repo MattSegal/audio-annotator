@@ -28,28 +28,10 @@ export const ClipControls = ({
   clipsRef.current = clips
 
   const onSave = () => {
-    const _clips = clipsRef.current
-    const [start, end] = newClipRef.current
-    const newClip = [start, end]
-    if (!(start && end)) return
-    if (_clips.length < 1) {
-      setClips([newClip])
-    } else if (end < _clips[0][0]) {
-      setClips([newClip, ..._clips])
-    } else if (start > _clips[_clips.length - 1][1]) {
-      setClips([..._clips, newClip])
-    } else {
-      for (let i = 1; i < _clips.length; i++) {
-        const prevClip = _clips[i - 1]
-        const nextClip = _clips[i + 1]
-        // const isBetweenClips = start > prevClip[0] && end < nextClip[1]
-        const isNoOverlap = start > prevClip[1] && end < nextClip[0]
-        // Skip this clip if it starts before the previous one, or ends after the next.
-        if (isNoOverlap) {
-          const newClips = [..._clips.slice(0, i), newClip, ..._clips.slice(i)]
-          setClips(newClips)
-        }
-      }
+    let newClip = getNewClip(newClipRef.current, clipsRef.current)
+    if (newClip) {
+      const newClips = [...clips, newClip].sort(sortClips)
+      setClips(newClips)
     }
   }
 
@@ -88,3 +70,40 @@ const El = styled.div`
   box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
   border: 1px solid rgba(34, 36, 38, 0.15);
 `
+
+const sortClips = (a, b) => a[0] - b[0]
+
+// getNewClip(newClipRef.current, clipsRef.current
+const getNewClip = (
+  pointA: number,
+  pointB: number,
+  clips: Array<[number, number]>
+) => {
+  if (_clips.length < 1) {
+    // If it's the only clip, just add it.
+    addClip = true
+  } else {
+    // If it's not the only clip, slot in in somewhere if possible.
+    for (let i = 0; i < _clips.length; i++) {
+      const prevClip = i > 0 ? _clips[i] : null
+      const nextClip = i < clips.length - 1 ? _clips[i + 1] : null
+      const isAfterPrev = prevClip ? start > prevClip[1] : true
+      const isBeforeNext = nextClip ? end < nextClip[0] : true
+      if (isAfterPrev && isBeforeNext) {
+        console.log(
+          'prev',
+          prevClip,
+          'next',
+          nextClip,
+          'is after',
+          isAfterPrev,
+          'is before',
+          isBeforeNext
+        )
+        addClip = true
+      }
+    }
+  }
+
+  return true
+}
