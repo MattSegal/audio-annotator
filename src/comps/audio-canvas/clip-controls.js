@@ -73,37 +73,24 @@ const El = styled.div`
 
 const sortClips = (a, b) => a[0] - b[0]
 
-// getNewClip(newClipRef.current, clipsRef.current
-const getNewClip = (
-  pointA: number,
-  pointB: number,
+export const getNewClip = (
+  points: [number, number],
   clips: Array<[number, number]>
-) => {
-  if (_clips.length < 1) {
-    // If it's the only clip, just add it.
-    addClip = true
-  } else {
-    // If it's not the only clip, slot in in somewhere if possible.
-    for (let i = 0; i < _clips.length; i++) {
-      const prevClip = i > 0 ? _clips[i] : null
-      const nextClip = i < clips.length - 1 ? _clips[i + 1] : null
-      const isAfterPrev = prevClip ? start > prevClip[1] : true
-      const isBeforeNext = nextClip ? end < nextClip[0] : true
-      if (isAfterPrev && isBeforeNext) {
-        console.log(
-          'prev',
-          prevClip,
-          'next',
-          nextClip,
-          'is after',
-          isAfterPrev,
-          'is before',
-          isBeforeNext
-        )
-        addClip = true
-      }
+): [number, number] | void => {
+  // Ensure points are sorted
+  const clip = points[0] < points[1] ? points : [points[1], points[0]]
+  // If it's the only clip, just add it.
+  if (clips.length < 1) return clip
+  // If it's not the only clip, slot in in somewhere if possible.
+  const [start, end] = clip
+  if (end < clips[0][0]) return clip
+  for (let i = 0; i < clips.length; i++) {
+    const prevClip = clips[i]
+    const nextClip = i < clips.length - 1 ? clips[i + 1] : null
+    const isAfterPrev = start > prevClip[1]
+    const isBeforeNext = nextClip ? end < nextClip[0] : true
+    if (isAfterPrev && isBeforeNext) {
+      return clip
     }
   }
-
-  return true
 }
