@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { CanvasWrapper, CanvasContainer } from './container'
 import { Waveform } from './waveform'
@@ -14,9 +14,16 @@ type Props = {
 }
 
 export const AudioCanvas = ({ file, sound }: Props) => {
-  const [clips, setClips] = useState<Array<[number, number]>>([])
+  const savedClips = loadClips(file.name)
+  const [clips, setClips] = useState<Array<[number, number]>>(savedClips)
   const [dragStart, setDragStart] = useState<number>(0)
   const [dragEnd, setDragEnd] = useState<number>(0)
+  useEffect(() => {
+    saveClips(file.name, clips)
+  }, [clips])
+  useEffect(() => {
+    setClips(loadClips(file.name))
+  }, [file])
   return (
     <CanvasContainer>
       <CanvasWrapper zIndex={0}>
@@ -43,4 +50,14 @@ export const AudioCanvas = ({ file, sound }: Props) => {
       </CanvasWrapper>
     </CanvasContainer>
   )
+}
+
+const saveClips = (filename: string, clips: Array<[number, number]>) => {
+  const clipsStr = JSON.stringify(clips)
+  localStorage.setItem(filename, clipsStr)
+}
+
+const loadClips = (filename: string): Array<[number, number]> => {
+  const clipsStr = localStorage.getItem(filename)
+  return clipsStr ? JSON.parse(clipsStr) : []
 }

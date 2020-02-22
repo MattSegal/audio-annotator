@@ -69,7 +69,6 @@ const FileListWrapper = styled.div`
   overflow-y: scroll;
   padding: 1rem;
 `
-
 const AudioWrapper = styled.div`
   height: 100vh;
   padding: 1rem;

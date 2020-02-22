@@ -4,7 +4,7 @@
   "description": "Build chain for audio annotator web app",
   "author": "Matthew Segal",
   "scripts": {
-    "serve": "webpack-dev-server --config webpack/dev.js",
+    "serve": "webpack-dev-server --config webpack/dev.js --hot",
     "build": "webpack --config webpack/prod.js",
     "test": "jest --config jest.config.js src",
     "lint": "prettier --list-different \"src/**/*.js\"",
