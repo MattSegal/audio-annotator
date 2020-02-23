@@ -25,7 +25,7 @@ export const ClipDisplay = ({ clips }: Props) => {
         if (!canvasRef.current) return
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
-        ctx.fillStyle = 'rgba(250, 0, 0, 0.3)'
+        ctx.fillStyle = 'rgba(250, 200, 0, 0.3)'
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         for (let clip of clips) {
           ctx.fillRect(clip[0], 0, clip[1] - clip[0], canvas.height)

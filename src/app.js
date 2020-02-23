@@ -1,6 +1,5 @@
 // @flow
 import React, { useState } from 'react'
-import { hot } from 'react-hot-loader/root'
 
 import { AudioUploadForm, Workbench } from 'comps'
 
@@ -12,4 +11,4 @@ const App = () => {
   return <Workbench files={files} />
 }
 
-export default hot(App)
+export default App

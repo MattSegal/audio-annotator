@@ -72,10 +72,6 @@ const FileListWrapper = styled.div`
 const AudioWrapper = styled.div`
   height: 100vh;
   padding: 1rem;
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `
 const AudioWrapperInner = styled.div`
   width: ${CANVAS.WIDTH}px;
