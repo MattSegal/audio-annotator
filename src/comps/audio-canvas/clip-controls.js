@@ -71,8 +71,6 @@ const El = styled.div`
   border: 1px solid rgba(34, 36, 38, 0.15);
 `
 
-const sortClips = (a, b) => a[0] - b[0]
-
 export const getNewClip = (
   points: [number, number],
   clips: Array<[number, number]>

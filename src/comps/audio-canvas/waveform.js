@@ -4,6 +4,8 @@ import styled from 'styled-components'
 
 import { CANVAS } from 'consts'
 
+const DRAW_OFFSET = 1 / 3 // px
+
 type Props = {
   file: File,
 }
@@ -85,9 +87,9 @@ const renderWaveform = (
         for (let i = 0; i < bucketArray.length; i++) {
           const val = bucketArray[i] / maxVal
           canvasCtx.fillRect(
-            bucketWidth * i,
+            bucketWidth * i - DRAW_OFFSET,
             canvas.height,
-            bucketWidth,
+            bucketWidth + 2 * DRAW_OFFSET,
             -val * canvas.height
           )
         }

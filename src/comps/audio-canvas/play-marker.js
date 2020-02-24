@@ -5,13 +5,13 @@ import styled from 'styled-components'
 import { CANVAS } from 'consts'
 
 type Props = {
-  sound: any,
+  time: number,
+  maxTime: number,
 }
-
 const RENDER_MS = 32 // ~ 30 FPS
 
 // Renders the current play time marker to a canvas
-export const PlayMarker = ({ sound }: Props) => {
+export const PlayMarker = ({ time, maxTime }: Props) => {
   const canvasRef = useRef(null)
   const intervalRef = useRef(null)
   useEffect(() => {
@@ -22,8 +22,8 @@ export const PlayMarker = ({ sound }: Props) => {
     // Start a new animation
     intervalRef.current = setInterval(() => {
       const canvas = canvasRef.current
-      if (!canvas || !sound) return
-      renderPlayMarker(canvas, sound)
+      if (!canvas) return
+      renderPlayMarker(canvas, time, maxTime)
     }, RENDER_MS)
     return () => {
       // Clean up animation rendering on dismount.
@@ -31,15 +31,13 @@ export const PlayMarker = ({ sound }: Props) => {
         clearInterval(intervalRef.current)
       }
     }
-  }, [sound])
+  }, [time, maxTime])
   return (
     <CanvasEl ref={canvasRef} width={CANVAS.WIDTH} height={CANVAS.HEIGHT} />
   )
 }
 
-const renderPlayMarker = (canvas, sound) => {
-  const time = sound.seek()
-  const maxTime = sound._duration
+const renderPlayMarker = (canvas, time: number, maxTime: number) => {
   const percentDone = time / maxTime
   const xPos = canvas.width * percentDone
   const ctx = canvas.getContext('2d')

@@ -5,4 +5,5 @@ src
 [options]
 module.name_mapper='^comps' ->'<PROJECT_ROOT>/src/comps'
 module.name_mapper='^consts' ->'<PROJECT_ROOT>/src/consts'
+module.name_mapper='^types' ->'<PROJECT_ROOT>/src/types'
 suppress_comment= \\(.\\|\n\\)*\\@noflow
