@@ -30,7 +30,7 @@ export const ClipControls = ({
   const onSave = () => {
     let newClip = getNewClip(newClipRef.current, clipsRef.current)
     if (newClip) {
-      const newClips = [...clipsRef.current, newClip].sort(sortClips)
+      const newClips = [...clipsRef.current, newClip]
       setClips(newClips)
     }
   }

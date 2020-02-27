@@ -1,31 +1,10 @@
 // @flow
+
 // A time period in the audio file (start, stop),
 // representing an event tagged by the user.
 export type EventClip = {
   start: number,
   end: number,
-}
-
-// A segment of a audio file, which the user may tag
-export type AudioChunk = {
-  start: number, // N.B all time in 100ths of a second
-  end: number,
-  current: number,
-  play: () => void,
-  pause: () => void,
-  stop: () => void,
-  toggleLoop: () => void,
-}
-
-// An audio file uploaded by the user for tagging.
-export type AudioFile = {
-  name: string,
-  format: string,
-  clips: Array<EventClip>,
-  chunks: Array<AudioChunk>,
-  file: File,
-  addClip: (number, number) => void,
-  deleteClip: number => void,
 }
 
 // Mapping from filename to event clip array.
@@ -35,7 +14,7 @@ export type EventClipState = {
 
 // HowlerJS Sound object.
 // https://github.com/goldfire/howler.js/
-export type HowlerSound = {
+export type Howl = {
   // Play sound / soundId / sprite, returns a soundId
   play: (sprite?: string, soundId?: number) => number,
   // Stop sound
@@ -53,4 +32,21 @@ export type HowlerSound = {
   // Get duration of sound
   duration: (soundId?: number) => number,
   ctx: AudioContext,
+  sprites: {
+    [string]: [number, number],
+  },
+}
+
+// Generic slice of audio which can be played by the user.
+export type Sound = {
+  id: number | null,
+  start: number, // N.B all time in 100ths of a second
+  end: number,
+  duration: number,
+  isLoop: boolean,
+  current: () => number,
+  play: () => void,
+  pause: () => void,
+  stop: () => void,
+  toggleLoop: () => void,
 }

@@ -9,18 +9,18 @@ import { ClipDisplay } from './clip-display'
 import { ClipControls } from './clip-controls'
 import { Clip, ClipContainer } from './clip'
 
-import type { AudioClip } from 'types'
+// import type { AudioClip } from 'types'
 
 type Props = {
   file: File,
   currentTime: number,
   maxTime: number,
-  clips: Array<AudioClip>,
-  setClips: (Array<AudioClip>) => void,
+  clips: Array<any>,
+  setClips: (Array<any>) => void,
   deleteClip: number => void,
 }
 
-export const AudioCanvas = ({
+export const Canvas = ({
   file,
   currentTime,
   maxTime,
