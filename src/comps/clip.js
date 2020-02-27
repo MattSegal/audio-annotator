@@ -5,17 +5,19 @@ import { Icon } from 'semantic-ui-react'
 
 import { CANVAS } from 'consts'
 
+import type { EventClip } from 'types'
+
 type Props = {
   idx: number,
-  clip: [number, number],
+  clip: EventClip,
   onDelete: number => void,
 }
 
-export const Clip = ({ idx, clip, onDelete }: Props) => (
+const ClipItem = ({ idx, clip, onDelete }: Props) => (
   <ClipEl>
     <span>
-      <strong>Clip {idx + 1}</strong>: {toSeconds(clip[0])} to{' '}
-      {toSeconds(clip[1])}
+      <strong>Clip {idx + 1}</strong>: {toSeconds(clip.start)} to{' '}
+      {toSeconds(clip.end)}
     </span>
     <Icon name="delete" onClick={() => onDelete(idx)} />
   </ClipEl>
@@ -23,7 +25,7 @@ export const Clip = ({ idx, clip, onDelete }: Props) => (
 
 const toSeconds = (time: number) => (time / 100).toFixed(1) + 's'
 
-export const ClipContainer = styled.div`
+const ClipContainer = styled.div`
   display: grid;
   width: ${CANVAS.WIDTH}px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -38,3 +40,8 @@ const ClipEl = styled.div`
   display: flex;
   justify-content: space-between;
 `
+
+export const Clip = {
+  Item: ClipItem,
+  Container: ClipContainer,
+}

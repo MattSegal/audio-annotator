@@ -4,8 +4,10 @@ import styled from 'styled-components'
 
 import { CANVAS } from 'consts'
 
+import type { EventClip } from 'types'
+
 type Props = {
-  clips: Array<[number, number]>,
+  clips: Array<EventClip>,
 }
 
 const RENDER_MS = 64 // ~ 15 FPS
@@ -28,7 +30,7 @@ export const ClipDisplay = ({ clips }: Props) => {
         ctx.fillStyle = 'rgba(250, 200, 0, 0.3)'
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         for (let clip of clips) {
-          ctx.fillRect(clip[0], 0, clip[1] - clip[0], canvas.height)
+          ctx.fillRect(clip.start, 0, clip.end - clip.start, canvas.height)
         }
       })
     }, RENDER_MS)

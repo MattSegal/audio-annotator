@@ -8,10 +8,23 @@ import type { Sound } from 'types'
 type Props = {
   file: File,
   sound: Sound,
+  chunkSize: number,
+  chunkIdx: number,
+  setChunkSize: number => void,
+  setChunkIdx: number => void,
 }
 
-export const Controls = ({ file, sound }: Props) => {
+export const Controls = ({
+  file,
+  sound,
+  chunkSize,
+  chunkIdx,
+  setChunkSize,
+  setChunkIdx,
+}: Props) => {
   const fileName = file.name
+  // TODO - Allow user to view and set chunk size
+  // TODO - Allow user to view and set chunk idx
   return (
     <ControlsEl>
       <ActionIcon

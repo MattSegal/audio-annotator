@@ -21,8 +21,8 @@ export const useClips = (files: Array<File>, fileIdx: number) => {
       [file.name]: fileClips.filter((val, idx) => idx !== clipIdx),
     })
 
-  const addClip = (a: number, b: number) => {
-    let newClip = getNewClip([a, b], fileClips)
+  const addClip = (clip: EventClip) => {
+    let newClip = getNewClip([clip.start, clip.end], fileClips)
     if (newClip) {
       const newClips = [...fileClips, newClip].sort(sortClips)
       setClips({
