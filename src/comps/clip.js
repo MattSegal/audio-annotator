@@ -5,12 +5,12 @@ import { Icon } from 'semantic-ui-react'
 
 import { CANVAS } from 'consts'
 
-import type { EventClip } from 'types'
+import type { Clip as ClipType } from 'types'
 
 type Props = {
   idx: number,
-  clip: EventClip,
-  onDelete: number => void,
+  clip: ClipType,
+  onDelete: (string, number) => void,
 }
 
 const ClipItem = ({ idx, clip, onDelete }: Props) => (

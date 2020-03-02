@@ -4,10 +4,10 @@ import styled from 'styled-components'
 
 import { CANVAS } from 'consts'
 
-import type { EventClip } from 'types'
+import type { Clip } from 'types'
 
 type Props = {
-  clips: Array<EventClip>,
+  clips: Array<Clip>,
 }
 
 const RENDER_MS = 64 // ~ 15 FPS

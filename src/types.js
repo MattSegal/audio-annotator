@@ -2,14 +2,9 @@
 
 // A time period in the audio file (start, stop),
 // representing an event tagged by the user.
-export type EventClip = {
+export type Clip = {
   start: number,
   end: number,
-}
-
-// Mapping from filename to event clip array.
-export type EventClipState = {
-  [string]: Array<EventClip>,
 }
 
 // HowlerJS Sound object.
@@ -32,7 +27,7 @@ export type Howl = {
   // Get duration of sound
   duration: (soundId?: number) => number,
   ctx: AudioContext,
-  sprites: {
+  _sprite: {
     [string]: [number, number],
   },
 }
@@ -49,4 +44,52 @@ export type Sound = {
   pause: () => void,
   stop: () => void,
   toggleLoop: () => void,
+}
+
+// Mapping from filename to event clip array.
+export type ClipState = {
+  [string]: Array<Clip>,
+}
+
+export type _ClipReducer = {
+  add: (state: ClipState, filename: string, clip: Clip) => ClipState,
+  remove: (state: ClipState, filename: string, clipIdx: number) => ClipState,
+}
+export type ClipReducer = {
+  add: (filename: string, clip: Clip) => void,
+  remove: (filename: string, clipIdx: number) => void,
+}
+export type FileState = {
+  files: Array<File>,
+  fileIdx: number,
+  file: File | void,
+}
+
+export type _FileReducer = {
+  load: (state: FileState, files: Array<File>) => FileState,
+  increment: (state: FileState) => FileState,
+  decrement: (state: FileState) => FileState,
+}
+export type FileReducer = {
+  load: (files: Array<File>) => void,
+  increment: () => void,
+  decrement: () => void,
+}
+
+export type HowlState = {}
+export type _HowlReducer = {}
+export type HowlReducer = {}
+
+// Redux state
+export type State = {
+  files: FileState,
+  clips: ClipState,
+  howl: HowlState,
+}
+
+// Redux dispatch, as created by rematcher.
+export type Dispatch = {
+  files: FileReducer,
+  clips: ClipReducer,
+  howl: HowlReducer,
 }

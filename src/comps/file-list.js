@@ -2,12 +2,12 @@
 import React from 'react'
 import { List } from 'semantic-ui-react'
 
-import type { EventClipState } from 'types'
+import type { ClipState } from 'types'
 
 type Props = {
   files: Array<File>,
   fileIdx: number,
-  clips: EventClipState,
+  clips: ClipState,
   setFileIdx: number => void,
 }
 

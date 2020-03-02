@@ -1,4 +1,4 @@
-import { getNewClip } from './clips'
+import { getNewClip } from './utils'
 
 const TESTS = [
   {

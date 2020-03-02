@@ -2,7 +2,10 @@
 import React, { useState } from 'react'
 
 import { AudioUploadForm, Workbench, Player, FileList, Clip } from 'comps'
-import { useClips, useFiles, useHowl, useSound } from 'hooks'
+import { useFiles, useHowl, useSound } from 'hooks'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+
+import type { Dispatch, ClipState } from 'types'
 
 export const App = () => {
   // Audio chunk settings
@@ -11,9 +14,16 @@ export const App = () => {
 
   // User-uploaded files
   const { fileIdx, files, setFiles, setFileIdx } = useFiles()
+  const file: File | void = files[fileIdx]
 
   // User-tagged audio event clips
-  const { clips, fileClips, addClip, deleteClip } = useClips(files, fileIdx)
+  const clips: ClipState = useSelector(({ clips }) => clips, shallowEqual)
+  const dispatch: Dispatch = useDispatch()
+  const addClip = dispatch.clips.add
+  const deleteClip = dispatch.clips.remove
+  const fileClips = file ? clips[file.name] : []
+  console.log('Select CLIPS', clips)
+  // const { clips, fileClips, addClip, deleteClip } = useClips(files, fileIdx)
 
   // Sounds, created from the current file, segmented into chunks
   const howl = useHowl(fileIdx, files, chunkSize, fileClips)
@@ -22,12 +32,12 @@ export const App = () => {
   const [dragStart, setDragStart] = useState<number>(0)
   const [dragEnd, setDragEnd] = useState<number>(0)
 
+  // Create the current chunk's sound from the file's Howl
+  const chunkSprite = `chunk-${chunkIdx}`
+  const chunkSound = useSound(howl, chunkSprite)
   if (files.length < 1) {
     return <AudioUploadForm setFiles={setFiles} />
-  } else if (howl) {
-    const file = files[fileIdx]
-    const chunkSprite = `chunk-${chunkIdx}`
-    const chunkSound = useSound(howl, chunkSprite)
+  } else if (file && howl) {
     return (
       <Workbench.Container>
         <Workbench.Sidebar>
@@ -94,7 +104,12 @@ export const App = () => {
     return (
       <Workbench.Container>
         <Workbench.Sidebar>
-          <FileList files={files} fileIdx={fileIdx} />
+          <FileList
+            files={files}
+            fileIdx={fileIdx}
+            setFileIdx={setFileIdx}
+            clips={clips}
+          />
         </Workbench.Sidebar>
         <Workbench.BodyOuter>
           <Workbench.BodyInner>

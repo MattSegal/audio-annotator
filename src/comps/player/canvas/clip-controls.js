@@ -4,13 +4,13 @@ import styled from 'styled-components'
 
 import { CANVAS } from 'consts'
 
-import type { EventClip } from 'types'
+import type { Clip } from 'types'
 
 type Props = {
-  clips: Array<EventClip>,
+  clips: Array<Clip>,
   dragStart: number,
   dragEnd: number,
-  addClip: EventClip => void,
+  addClip: (string, Clip) => void,
   setDragStart: number => void,
   setDragEnd: number => void,
 }
@@ -25,7 +25,7 @@ export const ClipControls = ({
 }: Props) => {
   const elementRef = useRef(null)
   const clipsRef = useRef(clips)
-  const newClipRef = useRef<EventClip>({
+  const newClipRef = useRef<Clip>({
     start: dragStart,
     end: dragEnd,
   })

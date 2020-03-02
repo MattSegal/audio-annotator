@@ -1,13 +1,16 @@
 // @flow
 import React, { useState, useEffect } from 'react'
-import type { EventClip, EventClipState } from 'types'
+import type { Clip, ClipState } from 'types'
 
 const EVENT_CLIPS_KEY = 'event-clip-state'
 
 export const useClips = (files: Array<File>, fileIdx: number) => {
-  const [clips, setClips] = useState<EventClipState>({})
-  const file = files[fileIdx]
-  const fileClips = clips[file.name] || []
+  const [clips, setClips] = useState<ClipState>({})
+  const file: File | void = files[fileIdx]
+  let fileClips = []
+  if (file) {
+    fileClips = clips[file.name] || []
+  }
 
   // Load clips from local storage cache.
   useEffect(() => setClips(loadClips()), [])
@@ -15,13 +18,16 @@ export const useClips = (files: Array<File>, fileIdx: number) => {
   // Save clips to the local storage cache.
   useEffect(() => saveClips(clips), [clips])
 
-  const deleteClip = (clipIdx: number) =>
+  const deleteClip = (clipIdx: number) => {
+    if (!file) return
     setClips({
       ...clips,
       [file.name]: fileClips.filter((val, idx) => idx !== clipIdx),
     })
+  }
 
-  const addClip = (clip: EventClip) => {
+  const addClip = (clip: Clip) => {
+    if (!file) return
     let newClip = getNewClip([clip.start, clip.end], fileClips)
     if (newClip) {
       const newClips = [...fileClips, newClip].sort(sortClips)
@@ -43,21 +49,21 @@ export const useClips = (files: Array<File>, fileIdx: number) => {
 const sortClips = (a, b) => a.start - b.start
 
 // Save event clips to local storage.
-const saveClips = (clips: EventClipState) => {
+const saveClips = (clips: ClipState) => {
   const clipsStr = JSON.stringify(clips)
   localStorage.setItem(EVENT_CLIPS_KEY, clipsStr)
 }
 
 // Load cached event clips from local storage
-const loadClips = (): EventClipState => {
+const loadClips = (): ClipState => {
   const clipsStr = localStorage.getItem(EVENT_CLIPS_KEY)
   return clipsStr ? JSON.parse(clipsStr) : {}
 }
 
 export const getNewClip = (
   points: [number, number],
-  clips: Array<EventClip>
-): EventClip | void => {
+  clips: Array<Clip>
+): Clip | void => {
   // Ensure points are sorted
   const [start, end] = points[0] < points[1] ? points : [points[1], points[0]]
   const clip = { start, end }

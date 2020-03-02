@@ -47,7 +47,7 @@ export const Controls = ({
       />
       <ActionIcon
         title="Toggle loop"
-        onClick={sound.toggleLoop()}
+        onClick={sound.toggleLoop}
         size="large"
         name={sound.isLoop ? 'ban' : 'repeat'}
       />
