@@ -5,7 +5,12 @@ import type { Clip, Howl } from 'types/objects'
 
 // Rematcher states
 export type ClipState = {
-  [string]: Array<Clip>,
+  fileClips: { [string]: Array<Clip> },
+  clips: Array<Clip>,
+  drag: {
+    start: number,
+    end: number,
+  },
 }
 
 export type FileState = {

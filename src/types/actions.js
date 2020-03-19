@@ -5,6 +5,7 @@ import type { Clip, Howl } from 'types/objects'
 
 // Actions implemented by the clip model.
 type ClipActions = {
+  updateFile: (filename: string) => void,
   add: (filename: string, clip: Clip) => void,
   remove: (filename: string, clipIdx: number) => void,
 }

@@ -46,7 +46,7 @@ const reload = (dispatch, state) => {
   const { howl, chunkSize } = state.howl
   const { file } = state.files
   if (!file) return
-  const clips = state.clips[file.name]
+  const clips = state.clips.fileClips[file.name]
   if (howl) howl.stop()
 
   // Create a new howl.

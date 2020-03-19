@@ -1,5 +1,5 @@
 // @flow
-import type { FileState, Dispatch } from 'types'
+import type { State, FileState, Dispatch } from 'types'
 
 const state: FileState = {
   files: [],
@@ -38,9 +38,16 @@ const reducers = {
 
 const effects = (dispatch: Dispatch) => ({
   // Tell the Howl model to load the new file when the file changes.
-  load: () => dispatch.howl.reload(),
-  increment: () => dispatch.howl.reload(),
-  decrement: () => dispatch.howl.reload(),
+  load: (state: State) => onFileChange(state, dispatch),
+  increment: (state: State) => onFileChange(state, dispatch),
+  decrement: (state: State) => onFileChange(state, dispatch),
 })
+
+const onFileChange = (state: State, dispatch: Dispatch) => {
+  const { file } = state.files
+  if (!file) return
+  dispatch.clips.updateFile(file.name)
+  dispatch.howl.reload()
+}
 
 export const files = { state, reducers, effects }
