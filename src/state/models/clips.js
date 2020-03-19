@@ -1,12 +1,13 @@
 // @flow
 import { getNewClip } from '../utils'
 
-import type { ClipState, _ClipReducer } from 'types'
+import type { ClipState, Clip, Dispatch } from 'types'
 
 const state: ClipState = {}
-const reducers: _ClipReducer = {
+
+const reducers = {
   // Add a new clip.
-  add: (state, filename, clip) => {
+  add: (state: ClipState, filename: string, clip: Clip): ClipState => {
     const fileClips = state[filename]
     const newClip = getNewClip([clip.start, clip.end], fileClips)
     return {
@@ -15,7 +16,7 @@ const reducers: _ClipReducer = {
     }
   },
   // Remove an existing clip
-  remove: (state, filename, clipIdx) => {
+  remove: (state: ClipState, filename: string, clipIdx: number): ClipState => {
     const fileClips = state[filename]
     return {
       ...state,
@@ -24,11 +25,18 @@ const reducers: _ClipReducer = {
   },
 }
 
-export const clips = { state, reducers }
+const effects = (dispatch: Dispatch) => ({
+  // Tell the Howl model to reload the the clips change.
+  add: () => dispatch.howl.reload(),
+  remove: () => dispatch.howl.reload(),
+})
+
+export const clips = { state, reducers, effects }
 
 const sortClips = (a: any, b: any) => a.start - b.start
 
 // TODO - add this back
+// I think this is a plugin or some middleware or something?
 // // Save event clips to local storage.
 // const saveClips = (clips: ClipState) => {
 //   const clipsStr = JSON.stringify(clips)
