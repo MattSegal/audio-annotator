@@ -1,21 +1,18 @@
 // @flow
 import React from 'react'
 import { List } from 'semantic-ui-react'
+import { useSelector, shallowEqual } from 'react-redux'
 
-import type { ClipState } from 'types'
+import type { FileState } from 'types'
 
-type Props = {
-  files: Array<File>,
-  fileIdx: number,
-  clips: ClipState,
-  setFileIdx: number => void,
-}
-
-export const FileList = ({ files, fileIdx, clips, setFileIdx }: Props) => {
-  // TODO add up and down arrows with w/s
-  // TODO add number of clips
-  // TODO don't use browser scroll?
-
+// TODO add up and down arrows with w/s
+// TODO add number of clips
+// TODO don't use browser scroll?
+export const FileList = () => {
+  const { files, fileIdx }: FileState = useSelector(
+    ({ files }) => files,
+    shallowEqual
+  )
   return (
     <List divided relaxed>
       {files.map((f, idx) => (

@@ -3,53 +3,42 @@ import React from 'react'
 import { Segment, Icon, Header } from 'semantic-ui-react'
 import styled from 'styled-components'
 
-import type { Sound } from 'types'
+import { useDispatch, useSelector, shallowEquals } from 'react-redux'
 
-type Props = {
-  file: File,
-  sound: Sound,
-  chunkSize: number,
-  chunkIdx: number,
-  setChunkSize: number => void,
-  setChunkIdx: number => void,
-}
+import type { Dispatch, SoundState, FileState } from 'types'
 
-export const Controls = ({
-  file,
-  sound,
-  chunkSize,
-  chunkIdx,
-  setChunkSize,
-  setChunkIdx,
-}: Props) => {
-  const fileName = file.name
-  // TODO - Allow user to view and set chunk size
-  // TODO - Allow user to view and set chunk idx
+// TODO - Allow user to view and set chunk size
+// TODO - Allow user to view and set chunk idx
+export const Controls = () => {
+  const dispatch: Dispatch = useDispatch()
+  const { file }: FileState = useSelector(s => s.files, shallowEquals)
+  const { isLoop }: SoundState = useSelector(s => s.sound, shallowEquals)
+  const fileName = file ? file.name : 'No file selected'
   return (
     <ControlsEl>
       <ActionIcon
         title="Play"
-        onClick={sound.play}
+        onClick={dispatch.sound.play}
         size="large"
         name="play outline circle"
       />
       <ActionIcon
         title="Pause"
-        onClick={sound.pause}
+        onClick={dispatch.sound.pause}
         size="large"
         name="pause outline circle"
       />
       <ActionIcon
         title="Stop"
-        onClick={sound.stop}
+        onClick={dispatch.sound.stop}
         size="large"
         name="stop outline circle"
       />
       <ActionIcon
         title="Toggle loop"
-        onClick={sound.toggleLoop}
+        onClick={dispatch.sound.toggleLoop}
         size="large"
-        name={sound.isLoop ? 'ban' : 'repeat'}
+        name={isLoop ? 'ban' : 'repeat'}
       />
       <Header as="h4">{fileName}</Header>
     </ControlsEl>

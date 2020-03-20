@@ -1,35 +1,21 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector, shallowEquals } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-import type { Clip } from 'types'
+import type { Dispatch, Clip, ClipState, FileState } from 'types'
 
-type Props = {
-  clips: Array<Clip>,
-  dragStart: number,
-  dragEnd: number,
-  addClip: (string, Clip) => void,
-  setDragStart: number => void,
-  setDragEnd: number => void,
-}
+export const ClipControls = () => {
+  const dispatch: Dispatch = useDispatch()
+  const { file }: FileState = useSelector(s => s.files, shallowEquals)
+  const { clips, drag }: ClipState = useSelector(s => s.clips, shallowEquals)
 
-export const ClipControls = ({
-  clips,
-  dragStart,
-  dragEnd,
-  addClip,
-  setDragEnd,
-  setDragStart,
-}: Props) => {
   const elementRef = useRef(null)
   const clipsRef = useRef(clips)
-  const newClipRef = useRef<Clip>({
-    start: dragStart,
-    end: dragEnd,
-  })
-  newClipRef.current = { start: dragStart, end: dragEnd }
+  const newClipRef = useRef<Clip>(drag)
+  newClipRef.current = drag
   clipsRef.current = clips
 
   // Handle mouse events.
@@ -38,16 +24,17 @@ export const ClipControls = ({
     const el = elementRef.current
     const onMouseDown = (e: MouseEvent) => {
       const startX = e.offsetX
-      setDragStart(startX)
+      dispatch.clips.setDragStart(startX)
     }
     const onMouseMove = (e: MouseEvent) => {
       const endX = e.offsetX
-      setDragEnd(endX)
+      dispatch.clips.setDragEnd(endX)
     }
     const onMouseUp = () => {
-      addClip(newClipRef.current)
-      setDragStart(0)
-      setDragEnd(0)
+      const filename = file ? file.name : ''
+      dispatch.clips.add(filename, newClipRef.current)
+      dispatch.clips.setDragStart(0)
+      dispatch.clips.setDragEnd(0)
     }
     el.addEventListener('mousedown', onMouseDown)
     el.addEventListener('mousemove', onMouseMove)

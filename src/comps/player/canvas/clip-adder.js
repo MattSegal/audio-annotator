@@ -1,15 +1,14 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { useSelector, shallowEquals } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-type Props = {
-  dragStart: number,
-  dragEnd: number,
-}
+import type { ClipState } from 'types'
 
-export const ClipAdder = ({ dragStart, dragEnd }: Props) => {
+export const ClipAdder = () => {
+  const { drag }: ClipState = useSelector(s => s.clips, shallowEquals)
   const canvasRef = useRef(null)
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -17,12 +16,12 @@ export const ClipAdder = ({ dragStart, dragEnd }: Props) => {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      if (dragStart && dragEnd) {
+      if (drag.start && drag.end) {
         ctx.fillStyle = 'rgba(255, 0, 0, 0.3)'
-        ctx.fillRect(dragStart, 0, dragEnd - dragStart, canvas.height)
+        ctx.fillRect(drag.start, 0, drag.end - drag.start, canvas.height)
       }
     })
-  }, [dragStart, dragEnd])
+  }, [drag.start, drag.end])
   return (
     <CanvasEl ref={canvasRef} width={CANVAS.WIDTH} height={CANVAS.HEIGHT} />
   )

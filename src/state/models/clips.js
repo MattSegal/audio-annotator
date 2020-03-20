@@ -13,6 +13,20 @@ const state: ClipState = {
 }
 
 const reducers = {
+  setDragStart: (state: ClipState, start: number): ClipState => ({
+    ...state,
+    drag: {
+      ...state.drag,
+      start,
+    },
+  }),
+  setDragEnd: (state: ClipState, end: number): ClipState => ({
+    ...state,
+    drag: {
+      ...state.drag,
+      end,
+    },
+  }),
   updateFile: (state: ClipState, filename: string): ClipState => ({
     ...state,
     clips: state.fileClips[filename] || [],

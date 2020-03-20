@@ -1,17 +1,17 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { useSelector, shallowEquals } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
+import type { FileState } from 'types'
+
 const DRAW_OFFSET = 1 / 3 // px
 
-type Props = {
-  file: File,
-}
-
 // Renders a waveform to a canvas
-export const Waveform = ({ file }: Props) => {
+export const Waveform = () => {
+  const { file }: FileState = useSelector(s => s.files, shallowEquals)
   const canvasRef = useRef(null)
   useEffect(renderWaveform(file, canvasRef), [file])
   return (
@@ -27,7 +27,7 @@ const CanvasEl = styled.canvas`
 // Renders file waveform to canvas.
 // This is relatively expensive to run, so only re-render when file changes.
 const renderWaveform = (
-  file: File,
+  file: File | void,
   canvasRef: { current: HTMLCanvasElement | null }
 ) => () => {
   const canvas = canvasRef.current

@@ -1,18 +1,22 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector, shallowEquals } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-import type { Sound } from 'types'
+import type { SoundState, Dispatch } from 'types'
 
-type Props = {
-  sound: Sound,
-}
 const RENDER_MS = 32 // ~ 30 FPS
 
 // Renders the current play time marker to a canvas
-export const PlayMarker = ({ sound }: Props) => {
+export const PlayMarker = () => {
+  const dispatch: Dispatch = useDispatch()
+  const { start, duration }: SoundState = useSelector(
+    s => s.sound,
+    shallowEquals
+  )
+
   const canvasRef = useRef(null)
   const intervalRef = useRef(null)
   useEffect(() => {
@@ -24,7 +28,7 @@ export const PlayMarker = ({ sound }: Props) => {
     intervalRef.current = setInterval(() => {
       const canvas = canvasRef.current
       if (!canvas) return
-      renderPlayMarker(canvas, sound)
+      renderPlayMarker(canvas, start, duration, dispatch.sound.current)
     }, RENDER_MS)
     return () => {
       // Clean up animation rendering on dismount.
@@ -32,14 +36,19 @@ export const PlayMarker = ({ sound }: Props) => {
         clearInterval(intervalRef.current)
       }
     }
-  }, [sound])
+  }, [duration])
   return (
     <CanvasEl ref={canvasRef} width={CANVAS.WIDTH} height={CANVAS.HEIGHT} />
   )
 }
 
-const renderPlayMarker = (canvas, sound: Sound) => {
-  const percentDone = (sound.current() - sound.start) / sound.duration
+const renderPlayMarker = (
+  canvas,
+  start: number,
+  duration: number,
+  current: Function
+) => {
+  const percentDone = (current() - start) / duration
   const xPos = canvas.width * percentDone
   const ctx = canvas.getContext('2d')
   ctx.clearRect(0, 0, canvas.width, canvas.height)

@@ -8,6 +8,8 @@ type ClipActions = {
   updateFile: (filename: string) => void,
   add: (filename: string, clip: Clip) => void,
   remove: (filename: string, clipIdx: number) => void,
+  setDragStart: (start: number) => void,
+  setDragEnd: (end: number) => void,
 }
 
 // Actions implemented by the file model.

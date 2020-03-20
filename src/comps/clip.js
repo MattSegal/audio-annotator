@@ -2,26 +2,34 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Icon } from 'semantic-ui-react'
+import { useDispatch, useSelector, shallowEquals } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-import type { Clip as ClipType } from 'types'
+import type { Dispatch, FileState, Clip as ClipType } from 'types'
 
 type Props = {
   idx: number,
   clip: ClipType,
-  onDelete: (string, number) => void,
 }
 
-const ClipItem = ({ idx, clip, onDelete }: Props) => (
-  <ClipEl>
-    <span>
-      <strong>Clip {idx + 1}</strong>: {toSeconds(clip.start)} to{' '}
-      {toSeconds(clip.end)}
-    </span>
-    <Icon name="delete" onClick={() => onDelete(idx)} />
-  </ClipEl>
-)
+const ClipItem = ({ idx, clip }: Props) => {
+  const dispatch: Dispatch = useDispatch()
+  const { file }: FileState = useSelector(s => s.files, shallowEquals)
+  const filename = file ? file.name : ''
+  return (
+    <ClipEl>
+      <span>
+        <strong>Clip {idx + 1}</strong>: {toSeconds(clip.start)} to{' '}
+        {toSeconds(clip.end)}
+      </span>
+      <Icon
+        name="delete"
+        onClick={() => dispatch.clips.remove(filename, idx)}
+      />
+    </ClipEl>
+  )
+}
 
 const toSeconds = (time: number) => (time / 100).toFixed(1) + 's'
 

@@ -1,18 +1,16 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import { useSelector, shallowEquals } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-import type { Clip } from 'types'
-
-type Props = {
-  clips: Array<Clip>,
-}
+import type { ClipState } from 'types'
 
 const RENDER_MS = 64 // ~ 15 FPS
 
-export const ClipDisplay = ({ clips }: Props) => {
+export const ClipDisplay = () => {
+  const { clips }: ClipState = useSelector(s => s.clips, shallowEquals)
   const canvasRef = useRef(null)
   const intervalRef = useRef(null)
   // Draw clips
