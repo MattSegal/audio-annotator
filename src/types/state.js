@@ -32,6 +32,7 @@ export type SoundState = {
   end: number,
   duration: number,
   isLoop: boolean,
+  playbackRate: number,
   sprite: string,
 }
 

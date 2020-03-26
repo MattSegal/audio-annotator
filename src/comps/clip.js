@@ -6,7 +6,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-import type { Dispatch, FileState, Clip as ClipType } from 'types'
+import type { Dispatch, FileState, Clip as ClipType, HowlState } from 'types'
 
 type Props = {
   idx: number,
@@ -15,17 +15,27 @@ type Props = {
 
 const ClipItem = ({ idx, clip }: Props) => {
   const dispatch: Dispatch = useDispatch()
+  const { howl }: HowlState = useSelector(s => s.howl, shallowEqual)
   const { file }: FileState = useSelector(s => s.files, shallowEqual)
   const filename = file ? file.name : ''
+  const onPlay = () => howl && howl.play(`clip-${idx}`)
   return (
     <ClipEl>
       <span>
         <strong>Clip {idx + 1}</strong>: {toSeconds(clip.start)} to{' '}
         {toSeconds(clip.end)}
       </span>
-      <Icon
-        name="delete"
+      <ActionIcon
+        title="Play"
+        onClick={onPlay}
+        size="large"
+        name="play outline circle"
+      />
+      <ActionIcon
+        title="Delete"
         onClick={() => dispatch.clips.remove({ filename, clipIdx: idx })}
+        size="large"
+        name="delete"
       />
     </ClipEl>
   )
@@ -47,6 +57,10 @@ const ClipEl = styled.div`
   border: 1px solid rgba(34, 36, 38, 0.15);
   display: flex;
   justify-content: space-between;
+`
+
+const ActionIcon = styled(Icon)`
+  cursor: pointer;
 `
 
 export const Clip = {

@@ -4,6 +4,7 @@ import { getNewClip } from '../utils'
 import type { ClipState, Clip, Dispatch, State } from 'types'
 
 const EVENT_CLIPS_KEY = 'event-clip-state'
+const CLIP_INCREMENT = 100 // ms
 
 // Save event clips to local storage.
 const saveFileClips = (clips: { [string]: Array<Clip> }) => {
@@ -81,12 +82,108 @@ const reducers = {
       clips: newClips,
     }
   },
+  incrementStart: (
+    state: ClipState,
+    payload: { filename: string, clip: Clip }
+  ): ClipState => {
+    const { filename, clip } = payload
+    const newClips = state.clips.map(c => {
+      const newStart = clip.start + CLIP_INCREMENT
+      if (c.start === clip.start && c.end == clip.end && newStart < clip.end) {
+        return {
+          start: newStart,
+          end: clip.end,
+        }
+      } else {
+        return c
+      }
+    })
+    const newFileClips = { ...state.fileClips, [filename]: newClips }
+    return {
+      ...state,
+      fileClips: newFileClips,
+      clips: newClips,
+    }
+  },
+  decrementStart: (
+    state: ClipState,
+    payload: { filename: string, clip: Clip }
+  ): ClipState => {
+    const { filename, clip } = payload
+    const newClips = state.clips.map(c => {
+      const newStart = clip.start - CLIP_INCREMENT
+      if (c.start === clip.start && c.end == clip.end) {
+        return {
+          start: newStart,
+          end: clip.end,
+        }
+      } else {
+        return c
+      }
+    })
+    const newFileClips = { ...state.fileClips, [filename]: newClips }
+    return {
+      ...state,
+      fileClips: newFileClips,
+      clips: newClips,
+    }
+  },
+  incrementEnd: (
+    state: ClipState,
+    payload: { filename: string, clip: Clip }
+  ): ClipState => {
+    const { filename, clip } = payload
+    const newClips = state.clips.map(c => {
+      const newEnd = clip.end + CLIP_INCREMENT
+      if (c.start === clip.start && c.end == clip.end) {
+        return {
+          start: clip.start,
+          end: newEnd,
+        }
+      } else {
+        return c
+      }
+    })
+    const newFileClips = { ...state.fileClips, [filename]: newClips }
+    return {
+      ...state,
+      fileClips: newFileClips,
+      clips: newClips,
+    }
+  },
+  decrementEnd: (
+    state: ClipState,
+    payload: { filename: string, clip: Clip }
+  ): ClipState => {
+    const { filename, clip } = payload
+    const newClips = state.clips.map(c => {
+      const newEnd = clip.end - CLIP_INCREMENT
+      if (c.start === clip.start && c.end == clip.end && newEnd < clip.start) {
+        return {
+          start: clip.start,
+          end: newEnd,
+        }
+      } else {
+        return c
+      }
+    })
+    const newFileClips = { ...state.fileClips, [filename]: newClips }
+    return {
+      ...state,
+      fileClips: newFileClips,
+      clips: newClips,
+    }
+  },
 }
 
 const effects = (dispatch: Dispatch) => ({
   // Tell the Howl model to reload the the clips change.
   add: (_: void, state: State) => onClipChange(state, dispatch),
   remove: (_: void, state: State) => onClipChange(state, dispatch),
+  incrementStart: (_: void, state: State) => onClipChange(state, dispatch),
+  decrementStart: (_: void, state: State) => onClipChange(state, dispatch),
+  incrementEnd: (_: void, state: State) => onClipChange(state, dispatch),
+  decrementEnd: (_: void, state: State) => onClipChange(state, dispatch),
 })
 
 const onClipChange = (state: State, dispatch: Dispatch) => {

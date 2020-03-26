@@ -2,10 +2,12 @@
 import { Howl as HowlerHowl } from 'howler'
 import type { Howl, HowlState, State, Dispatch } from 'types'
 
+const CHUNK_SIZE_INCREMENT = 100
+
 const state: HowlState = {
   howl: null,
   loading: true,
-  chunkSize: 3000,
+  chunkSize: 2000,
   chunkIdx: 0,
   numChunks: 0,
 }
@@ -27,15 +29,15 @@ const reducers = {
     if (chunkSize >= 5000) return state
     return {
       ...state,
-      chunkSize: chunkSize + 500,
+      chunkSize: chunkSize + CHUNK_SIZE_INCREMENT,
     }
   },
   decrementChunkSize: (state: HowlState): HowlState => {
     const { chunkSize } = state
-    if (chunkSize <= 500) return state
+    if (chunkSize <= 200) return state
     return {
       ...state,
-      chunkSize: chunkSize - 500,
+      chunkSize: chunkSize - CHUNK_SIZE_INCREMENT,
     }
   },
 
@@ -118,7 +120,7 @@ const reload = (dispatch, state) => {
     // Add clip sprites
     for (let i = 0; i < clips.length; i++) {
       const { start, end } = clips[i]
-      const key = `clip-${idx}`
+      const key = `clip-${i}`
       // [offset, duration]
       sprites[key] = [start, end - start]
     }

@@ -9,6 +9,10 @@ type ClipActions = {
   remove: (payload: { filename: string, clipIdx: number }) => void,
   setDragStart: (start: number) => void,
   setDragEnd: (end: number) => void,
+  incrementStart: (payload: { filename: string, clip: Clip }) => void,
+  decrementStart: (payload: { filename: string, clip: Clip }) => void,
+  incrementEnd: (payload: { filename: string, clip: Clip }) => void,
+  decrementEnd: (payload: { filename: string, clip: Clip }) => void,
 }
 
 type FileActions = {
@@ -32,6 +36,8 @@ type SoundActions = {
   pause: () => void,
   stop: () => void,
   toggleLoop: () => void,
+  incrementRate: () => void,
+  decrementRate: () => void,
   update: (payload: any) => void,
 }
 

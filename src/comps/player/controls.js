@@ -13,13 +13,14 @@ import type {
   ClipState,
 } from 'types'
 
-// TODO - Allow user to view and set chunk size
-// TODO - Allow user to view and set chunk idx
 export const Controls = () => {
   const dispatch: Dispatch = useDispatch()
   const { fileClips }: ClipState = useSelector(s => s.clips, shallowEqual)
   const { files, fileIdx }: FileState = useSelector(s => s.files, shallowEqual)
-  const { isLoop }: SoundState = useSelector(s => s.sound, shallowEqual)
+  const { playbackRate, isLoop }: SoundState = useSelector(
+    s => s.sound,
+    shallowEqual
+  )
   const { chunkIdx, numChunks, chunkSize }: HowlState = useSelector(
     s => s.howl,
     shallowEqual
@@ -73,7 +74,6 @@ export const Controls = () => {
       >
         File {fileIdx + 1} of {files.length}
       </Incrementer>
-
       <Incrementer
         onPlus={dispatch.howl.incrementChunkIdx}
         onMinus={dispatch.howl.decrementChunkIdx}
@@ -87,6 +87,12 @@ export const Controls = () => {
         onMinus={dispatch.howl.decrementChunkSize}
       >
         Chunk size {chunkSize} ms
+      </Incrementer>
+      <Incrementer
+        onPlus={dispatch.sound.incrementRate}
+        onMinus={dispatch.sound.decrementRate}
+      >
+        Playback rate {playbackRate.toFixed(1)}
       </Incrementer>
     </ControlsEl>
   )

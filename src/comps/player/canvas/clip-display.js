@@ -24,9 +24,12 @@ export const ClipDisplay = () => {
     ctx.fillStyle = 'rgba(250, 200, 0, 0.3)'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     for (let clip of clips) {
-      if (clip.start < startTime || clip.end > endTime) continue
-      const canvasStart = (CANVAS.WIDTH * (clip.start - startTime)) / chunkSize
-      const canvasEnd = (CANVAS.WIDTH * (clip.end - startTime)) / chunkSize
+      if (clip.start < startTime && clip.end > endTime) continue
+      const drawStartTime = clip.start < startTime ? startTime : clip.start
+      const drawEndTime = clip.end > endTime ? endTime : clip.end
+      const canvasStart =
+        (CANVAS.WIDTH * (drawStartTime - startTime)) / chunkSize
+      const canvasEnd = (CANVAS.WIDTH * (drawEndTime - startTime)) / chunkSize
       ctx.fillRect(canvasStart, 0, canvasEnd - canvasStart, canvas.height)
     }
   }, [clips, chunkIdx, chunkSize])
