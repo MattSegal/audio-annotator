@@ -4,7 +4,7 @@ import { getNewClip } from '../utils'
 import type { ClipState, Clip, Dispatch, State } from 'types'
 
 const EVENT_CLIPS_KEY = 'event-clip-state'
-const CLIP_INCREMENT = 100 // ms
+const CLIP_INCREMENT = 10 // ms
 
 // Save event clips to local storage.
 const saveFileClips = (clips: { [string]: Array<Clip> }) => {
@@ -158,7 +158,7 @@ const reducers = {
     const { filename, clip } = payload
     const newClips = state.clips.map(c => {
       const newEnd = clip.end - CLIP_INCREMENT
-      if (c.start === clip.start && c.end == clip.end && newEnd < clip.start) {
+      if (c.start === clip.start && c.end == clip.end && newEnd > clip.start) {
         return {
           start: clip.start,
           end: newEnd,

@@ -1,9 +1,10 @@
 // @flow
 import React, { useEffect } from 'react'
-import { Segment, Icon, Button } from 'semantic-ui-react'
+import { Segment, Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
-
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+
+import { Incrementer } from 'comps/incrementer'
 
 import type {
   Dispatch,
@@ -97,26 +98,6 @@ export const Controls = () => {
     </ControlsEl>
   )
 }
-
-const Incrementer = ({ children, plusTip, minusTip, onPlus, onMinus }: any) => (
-  <IncrementerEl>
-    <Button icon onClick={onMinus} title={minusTip}>
-      <Icon name="minus" />
-    </Button>
-    <span>{children}</span>
-    <Button icon onClick={onPlus} title={plusTip}>
-      <Icon name="plus" />
-    </Button>
-  </IncrementerEl>
-)
-
-const IncrementerEl = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 250px;
-  margin: 0.3rem 0;
-`
 
 const ActionIcon = styled(Icon)`
   cursor: pointer;
