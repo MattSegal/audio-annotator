@@ -18,7 +18,7 @@ export const ClipDelete = () => {
   )
   const startTime = chunkIdx * chunkSize
   const endTime = (chunkIdx + 1) * chunkSize
-  if (!file) return
+  if (!file) return null
   return (
     <React.Fragment>
       {clips

@@ -44,7 +44,6 @@ const effects = (dispatch: Dispatch) => ({
 })
 
 const onFileChange = (state: State, dispatch: Dispatch) => {
-  console.log(state)
   const { file } = state.files
   if (!file) return
   dispatch.clips.updateFile(file.name)

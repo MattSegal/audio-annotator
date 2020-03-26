@@ -25,7 +25,6 @@ export const ClipDisplay = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     for (let clip of clips) {
       if (clip.start < startTime || clip.end > endTime) continue
-      console.log(clip, startTime, endTime)
       const canvasStart = (CANVAS.WIDTH * (clip.start - startTime)) / chunkSize
       const canvasEnd = (CANVAS.WIDTH * (clip.end - startTime)) / chunkSize
       ctx.fillRect(canvasStart, 0, canvasEnd - canvasStart, canvas.height)

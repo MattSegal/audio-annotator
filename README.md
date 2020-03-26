@@ -21,10 +21,6 @@ Workflow
 - user can download annotations as JSON file
 - annotations stored in localstorage
 
-TODO
-
-- show number of clips in filelist
-
 # Development
 
 - Run dev server: `yarn serve`

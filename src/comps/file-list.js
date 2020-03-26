@@ -3,13 +3,14 @@ import React, { useEffect } from 'react'
 import { List } from 'semantic-ui-react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
-import type { Dispatch, FileState } from 'types'
+import type { Dispatch, FileState, ClipState } from 'types'
 
-// TODO add up and down arrows with w/s
-// TODO add number of clips
-// TODO don't use browser scroll?
 export const FileList = () => {
   const dispatch: Dispatch = useDispatch()
+  const { fileClips }: ClipState = useSelector(
+    ({ clips }) => clips,
+    shallowEqual
+  )
   const { files, fileIdx }: FileState = useSelector(
     ({ files }) => files,
     shallowEqual
@@ -27,21 +28,25 @@ export const FileList = () => {
 
   return (
     <List divided relaxed>
-      {files.map((f, idx) => (
-        <List.Item key={f.name}>
-          <List.Icon
-            name={`file audio${fileIdx !== idx ? ' outline' : ''}`}
-            size="large"
-            verticalAlign="middle"
-          />
-          <List.Content>
-            <List.Header>{f.name}</List.Header>
-            <List.Description>
-              {f.type} - {(f.size / 1e6).toFixed(1)} MB
-            </List.Description>
-          </List.Content>
-        </List.Item>
-      ))}
+      {files.map((f, idx) => {
+        const clips = fileClips[f.name]
+        const numClips = clips ? clips.length : 0
+        return (
+          <List.Item key={f.name}>
+            <List.Icon
+              name={`file audio${fileIdx !== idx ? ' outline' : ''}`}
+              size="large"
+              verticalAlign="middle"
+            />
+            <List.Content>
+              <List.Header>{f.name}</List.Header>
+              <List.Description>
+                {f.type} - {(f.size / 1e6).toFixed(1)} MB - {numClips} clips
+              </List.Description>
+            </List.Content>
+          </List.Item>
+        )
+      })}
     </List>
   )
 }
