@@ -11,11 +11,15 @@ const state: SoundState = {
 }
 
 const reducers = {
-  reload: (state: SoundState, howl: Howl, sprite: string): SoundState => {
+  reload: (
+    state: SoundState,
+    payload: { howl: Howl, sprite: string }
+  ): SoundState => {
+    const { howl, sprite } = payload
     const spriteTimes = howl._sprite[sprite]
     if (!spriteTimes) return state
-    const duration = spriteTimes[0]
-    const start = spriteTimes[1]
+    const start = spriteTimes[0]
+    const duration = spriteTimes[1]
     const end = start + duration
     return {
       ...state,
@@ -33,32 +37,30 @@ const reducers = {
 }
 
 const effects = (dispatch: Dispatch) => ({
-  play: (state: State) => {
-    const { sprite } = state.sound
+  play: (_: void, state: State) => {
+    const { id, sprite } = state.sound
     const { howl } = state.howl
     if (!howl || !sprite) return
-    const id = howl.play(sprite)
-    dispatch.sound.update({ id })
+    if (id) {
+      howl.play(id)
+    } else {
+      const id = howl.play(sprite)
+      dispatch.sound.update({ id })
+    }
   },
-  current: (state: State) => {
-    const { id } = state.sound
-    const { howl } = state.howl
-    if (!howl) return
-    return id ? howl.seek(id) : 0
-  },
-  pause: (state: State) => {
+  pause: (_: void, state: State) => {
     const { id } = state.sound
     const { howl } = state.howl
     if (!howl || !id) return
     howl.pause(id)
   },
-  stop: (state: State) => {
+  stop: (_: void, state: State) => {
     const { id } = state.sound
     const { howl } = state.howl
     if (!howl || !id) return
     howl.stop(id)
   },
-  toggleLoop: (state: State) => {
+  toggleLoop: (_: void, state: State) => {
     const { id, isLoop } = state.sound
     const { howl } = state.howl
     if (!howl || !id) return

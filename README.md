@@ -21,13 +21,9 @@ Workflow
 - user can download annotations as JSON file
 - annotations stored in localstorage
 
-Imp notes
+TODO
 
-- Grab some semantic UI React elements
-- React + hooks + state (no redux)
-- Use Howler to manage audio (https://github.com/goldfire/howler.js#documentation)
-- Use sprite example as jump off point https://github.com/goldfire/howler.js/tree/master/examples/sprite
-- rip off whatever is available from https://github.com/MattSegal/music-player
+- show number of clips in filelist
 
 # Development
 

@@ -20,15 +20,15 @@ export type FileState = {
 }
 
 export type HowlState = {
-  loading: boolean,
   howl: Howl | null,
   chunkIdx: number,
   chunkSize: number,
+  numChunks: number,
 }
 
 export type SoundState = {
   id: number | null,
-  start: number, // N.B all time in 100ths of a second
+  start: number, // N.B all time in 1000ths of a second
   end: number,
   duration: number,
   isLoop: boolean,

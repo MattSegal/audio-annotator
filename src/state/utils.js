@@ -11,12 +11,12 @@ export const getNewClip = (
   // If it's the only clip, just add it.
   if (clips.length < 1) return clip
   // If it's not the only clip, slot in in somewhere if possible.
-  if (end < clips[0][0]) return clip
+  if (end < clips[0].start) return clip
   for (let i = 0; i < clips.length; i++) {
     const prevClip = clips[i]
     const nextClip = i < clips.length - 1 ? clips[i + 1] : null
-    const isAfterPrev = start > prevClip[1]
-    const isBeforeNext = nextClip ? end < nextClip[0] : true
+    const isAfterPrev = start > prevClip.end
+    const isBeforeNext = nextClip ? end < nextClip.start : true
     if (isAfterPrev && isBeforeNext) {
       return clip
     }

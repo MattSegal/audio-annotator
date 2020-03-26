@@ -25,21 +25,12 @@ export const App = () => {
           <Workbench.BodyInner>
             <Player.Controls />
             <Player.Canvas.Container>
-              <Player.Canvas.Layer zIndex={0}>
-                <Player.Canvas.ClipDisplay />
-              </Player.Canvas.Layer>
-              <Player.Canvas.Layer zIndex={1}>
-                <Player.Canvas.Waveform />
-              </Player.Canvas.Layer>
-              <Player.Canvas.Layer zIndex={2}>
-                <Player.Canvas.ClipAdder />
-              </Player.Canvas.Layer>
-              <Player.Canvas.Layer zIndex={3}>
-                <Player.Canvas.PlayMarker />
-              </Player.Canvas.Layer>
-              <Player.Canvas.Layer zIndex={4}>
-                <Player.Canvas.ClipControls />
-              </Player.Canvas.Layer>
+              <Player.Canvas.ClipDisplay />
+              <Player.Canvas.Waveform />
+              <Player.Canvas.ClipAdder />
+              <Player.Canvas.PlayMarker />
+              <Player.Canvas.ClipControls />
+              <Player.Canvas.ClipDelete />
             </Player.Canvas.Container>
 
             <Clip.Container>

@@ -12,7 +12,7 @@ export type Clip = {
 // https://github.com/goldfire/howler.js/
 export type Howl = {
   // Play sound / soundId / sprite, returns a soundId
-  play: (sprite?: string, soundId?: number) => number,
+  play: (spriteOrSoundId?: string | number, soundId?: number) => number,
   // Stop sound
   stop: (soundId?: number) => void,
   // Returns whether sound is playing

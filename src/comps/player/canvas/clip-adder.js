@@ -1,14 +1,14 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { useSelector, shallowEquals } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
 import type { ClipState } from 'types'
 
 export const ClipAdder = () => {
-  const { drag }: ClipState = useSelector(s => s.clips, shallowEquals)
+  const { drag }: ClipState = useSelector(s => s.clips, shallowEqual)
   const canvasRef = useRef(null)
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -28,6 +28,9 @@ export const ClipAdder = () => {
 }
 
 const CanvasEl = styled.canvas`
-  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-  border: 1px solid rgba(34, 36, 38, 0.15);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 `

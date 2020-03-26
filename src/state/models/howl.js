@@ -5,40 +5,70 @@ import type { Howl, HowlState, State, Dispatch } from 'types'
 const state: HowlState = {
   howl: null,
   loading: true,
-  chunkSize: 400,
+  chunkSize: 3000,
   chunkIdx: 0,
+  numChunks: 0,
 }
 const reducers = {
-  // Reload the current sounds
-  reload: (state: HowlState): HowlState => ({
-    ...state,
-    loading: true,
-  }),
-  loaded: (state: HowlState, howl: Howl): HowlState => ({
-    ...state,
-    loading: false,
-    howl,
-  }),
-  setChunkSize: (state: HowlState, size: number): HowlState => ({
-    ...state,
-    chunkSize: size,
-  }),
-  setChunkIdx: (state: HowlState, idx: number): HowlState => ({
-    ...state,
-    chunkIdx: idx,
-  }),
+  loaded: (
+    state: HowlState,
+    payload: { howl: Howl, numChunks: number }
+  ): HowlState => {
+    const { howl, numChunks } = payload
+    return {
+      ...state,
+      chunkIdx: numChunks === state.numChunks ? state.chunkIdx : 0,
+      howl,
+      numChunks,
+    }
+  },
+  incrementChunkSize: (state: HowlState): HowlState => {
+    const { chunkSize } = state
+    if (chunkSize >= 5000) return state
+    return {
+      ...state,
+      chunkSize: chunkSize + 500,
+    }
+  },
+  decrementChunkSize: (state: HowlState): HowlState => {
+    const { chunkSize } = state
+    if (chunkSize <= 500) return state
+    return {
+      ...state,
+      chunkSize: chunkSize - 500,
+    }
+  },
+
+  incrementChunkIdx: (state: HowlState): HowlState => {
+    const { chunkIdx, numChunks } = state
+    if (chunkIdx >= numChunks - 1) return state
+    return {
+      ...state,
+      chunkIdx: chunkIdx + 1,
+    }
+  },
+  decrementChunkIdx: (state: HowlState): HowlState => {
+    const { chunkIdx } = state
+    if (chunkIdx <= 0) return state
+    return {
+      ...state,
+      chunkIdx: chunkIdx - 1,
+    }
+  },
 }
 
 const effects = (dispatch: Dispatch) => ({
-  loaded: (payload: void, state: State) => {
-    const { howl, chunkIdx } = state.howl
+  loaded: (payload: { howl: Howl, numChunks: number }, state: State) => {
+    const { chunkIdx } = state.howl
     const sprite = `chunk-${chunkIdx}`
-    if (!howl) return
-    dispatch.sound.reload(howl, sprite)
+    if (!payload.howl) return
+    dispatch.sound.reload({ howl: payload.howl, sprite })
   },
-  reload: (payload: void, state: State) => reload(dispatch, state),
-  setChunkSize: (payload: void, state: State) => reload(dispatch, state),
-  setChunkIdx: (payload: void, state: State) => reload(dispatch, state),
+  reload: (_: void, state: State) => reload(dispatch, state),
+  incrementChunkSize: (_: void, state: State) => reload(dispatch, state),
+  decrementChunkSize: (_: void, state: State) => reload(dispatch, state),
+  incrementChunkIdx: (_: void, state: State) => reload(dispatch, state),
+  decrementChunkIdx: (_: void, state: State) => reload(dispatch, state),
 })
 
 // Reload the Howl
@@ -46,7 +76,7 @@ const reload = (dispatch, state) => {
   const { howl, chunkSize } = state.howl
   const { file } = state.files
   if (!file) return
-  const clips = state.clips.fileClips[file.name]
+  const clips = state.clips.fileClips[file.name] || []
   if (howl) howl.stop()
 
   // Create a new howl.
@@ -58,7 +88,7 @@ const reload = (dispatch, state) => {
       format: getAudioFormat(file),
       onload: () => {
         // Convert seconds to centiseconds
-        const duration = 100 * h.duration()
+        const duration = 1000 * h.duration()
         onDurationKnown(reader.result, duration)
       },
     })
@@ -73,12 +103,15 @@ const reload = (dispatch, state) => {
     const sprites = {}
     let chunkStart = 0
     let idx = 0
+    let numChunks = 0
     while (chunkStart < duration) {
       const key = `chunk-${idx}`
       const nextStep = chunkStart + chunkSize
       const end = nextStep > duration ? duration : nextStep
-      sprites[key] = [chunkStart, end]
+      // [offset, duration]
+      sprites[key] = [chunkStart, end - chunkStart]
       chunkStart = nextStep
+      numChunks++
       idx++
     }
 
@@ -86,15 +119,16 @@ const reload = (dispatch, state) => {
     for (let i = 0; i < clips.length; i++) {
       const { start, end } = clips[i]
       const key = `clip-${idx}`
+      // [offset, duration]
       sprites[key] = [start, end - start]
     }
 
     const newHowl: Howl = new HowlerHowl({
       src: reader.result,
       format: getAudioFormat(file),
-      sprites,
+      sprite: sprites,
     })
-    dispatch.howl.loaded(newHowl)
+    dispatch.howl.loaded({ howl: newHowl, numChunks })
   }
 
   // Read audio file data into memory.

@@ -6,8 +6,8 @@ import type { Clip, Howl } from 'types/objects'
 // Actions implemented by the clip model.
 type ClipActions = {
   updateFile: (filename: string) => void,
-  add: (filename: string, clip: Clip) => void,
-  remove: (filename: string, clipIdx: number) => void,
+  add: (payload: { filename: string, clip: Clip }) => void,
+  remove: (payload: { filename: string, clipIdx: number }) => void,
   setDragStart: (start: number) => void,
   setDragEnd: (end: number) => void,
 }
@@ -22,19 +22,20 @@ type FileActions = {
 // Actions implemented by the howl model.
 type HowlActions = {
   reload: () => void,
-  loaded: (howl: Howl) => void,
-  setChunkSize: (size: number) => void,
-  setChunkIdx: (idx: number) => void,
+  loaded: (payload: { howl: Howl, numChunks: number }) => void,
+  incrementChunkSize: () => void,
+  decrementChunkSize: () => void,
+  incrementChunkIdx: () => void,
+  decrementChunkIdx: () => void,
 }
 
 type SoundActions = {
-  reload: (howl: Howl, sprite: string) => void,
-  current: () => number,
+  reload: (payload: { howl: Howl, sprite: string }) => void,
   play: () => void,
   pause: () => void,
   stop: () => void,
   toggleLoop: () => void,
-  update: (data: any) => void,
+  update: (payload: any) => void,
 }
 
 // Redux dispatch, as created by rematcher.

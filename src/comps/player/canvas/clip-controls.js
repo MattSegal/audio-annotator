@@ -1,22 +1,27 @@
 // @flow
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { useDispatch, useSelector, shallowEquals } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
-import type { Dispatch, Clip, ClipState, FileState } from 'types'
+import type { Dispatch, Clip, ClipState, FileState, HowlState } from 'types'
 
 export const ClipControls = () => {
   const dispatch: Dispatch = useDispatch()
-  const { file }: FileState = useSelector(s => s.files, shallowEquals)
-  const { clips, drag }: ClipState = useSelector(s => s.clips, shallowEquals)
-
+  const { file }: FileState = useSelector(s => s.files, shallowEqual)
+  const { drag }: ClipState = useSelector(s => s.clips, shallowEqual)
+  const { chunkIdx, chunkSize }: HowlState = useSelector(
+    s => s.howl,
+    shallowEqual
+  )
+  const startTime = chunkIdx * chunkSize
   const elementRef = useRef(null)
-  const clipsRef = useRef(clips)
   const newClipRef = useRef<Clip>(drag)
-  newClipRef.current = drag
-  clipsRef.current = clips
+  newClipRef.current = {
+    start: startTime + chunkSize * (drag.start / CANVAS.WIDTH),
+    end: startTime + chunkSize * (drag.end / CANVAS.WIDTH),
+  }
 
   // Handle mouse events.
   useEffect(() => {
@@ -24,15 +29,18 @@ export const ClipControls = () => {
     const el = elementRef.current
     const onMouseDown = (e: MouseEvent) => {
       const startX = e.offsetX
-      dispatch.clips.setDragStart(startX)
+      const startTime = startX
+      dispatch.clips.setDragStart(startTime)
     }
     const onMouseMove = (e: MouseEvent) => {
+      if (!newClipRef.current.start) return
       const endX = e.offsetX
-      dispatch.clips.setDragEnd(endX)
+      const endTime = endX
+      dispatch.clips.setDragEnd(endTime)
     }
     const onMouseUp = () => {
       const filename = file ? file.name : ''
-      dispatch.clips.add(filename, newClipRef.current)
+      dispatch.clips.add({ filename: filename, clip: newClipRef.current })
       dispatch.clips.setDragStart(0)
       dispatch.clips.setDragEnd(0)
     }
@@ -44,13 +52,14 @@ export const ClipControls = () => {
       el.removeEventListener('mousemove', onMouseMove)
       el.removeEventListener('mouseup', onMouseUp)
     }
-  }, [])
+  }, [file])
   return <ClipControlsEl ref={elementRef} />
 }
 
 const ClipControlsEl = styled.div`
-  width: ${CANVAS.WIDTH}px;
-  height: ${CANVAS.HEIGHT}px;
-  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-  border: 1px solid rgba(34, 36, 38, 0.15);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 `

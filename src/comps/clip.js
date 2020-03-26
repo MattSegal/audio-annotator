@@ -2,7 +2,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Icon } from 'semantic-ui-react'
-import { useDispatch, useSelector, shallowEquals } from 'react-redux'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 
 import { CANVAS } from 'consts'
 
@@ -15,7 +15,7 @@ type Props = {
 
 const ClipItem = ({ idx, clip }: Props) => {
   const dispatch: Dispatch = useDispatch()
-  const { file }: FileState = useSelector(s => s.files, shallowEquals)
+  const { file }: FileState = useSelector(s => s.files, shallowEqual)
   const filename = file ? file.name : ''
   return (
     <ClipEl>
@@ -25,13 +25,13 @@ const ClipItem = ({ idx, clip }: Props) => {
       </span>
       <Icon
         name="delete"
-        onClick={() => dispatch.clips.remove(filename, idx)}
+        onClick={() => dispatch.clips.remove({ filename, clipIdx: idx })}
       />
     </ClipEl>
   )
 }
 
-const toSeconds = (time: number) => (time / 100).toFixed(1) + 's'
+const toSeconds = (time: number) => (time / 1000).toFixed(1) + 's'
 
 const ClipContainer = styled.div`
   display: grid;

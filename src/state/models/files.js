@@ -38,12 +38,13 @@ const reducers = {
 
 const effects = (dispatch: Dispatch) => ({
   // Tell the Howl model to load the new file when the file changes.
-  load: (state: State) => onFileChange(state, dispatch),
-  increment: (state: State) => onFileChange(state, dispatch),
-  decrement: (state: State) => onFileChange(state, dispatch),
+  load: (_: void, state: State) => onFileChange(state, dispatch),
+  increment: (_: void, state: State) => onFileChange(state, dispatch),
+  decrement: (_: void, state: State) => onFileChange(state, dispatch),
 })
 
 const onFileChange = (state: State, dispatch: Dispatch) => {
+  console.log(state)
   const { file } = state.files
   if (!file) return
   dispatch.clips.updateFile(file.name)
